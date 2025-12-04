@@ -9,7 +9,7 @@ Rather than just implementing the code, my goal was to understand the *theoretic
 
 
 
-## 📚 Theoretical Framework (The "Why")
+## 📚 Theoretical Framework
 
 The core difference between these two methods lies in how they decompose the image.
 
