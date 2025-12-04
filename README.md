@@ -7,7 +7,7 @@ As an engineering student, I have always been fascinated by the mathematics behi
 
 Rather than just implementing the code, my goal was to understand the *theoretical trade-offs* between these methods. I investigated how they behave when compressing data (dimensionality reduction) and removing Gaussian noise, validating the results with PSNR metrics and Energy distribution plots.
 
----
+
 
 ## 📚 Theoretical Framework (The "Why")
 
@@ -31,50 +31,56 @@ $$F(u,v) = \sum_{x} \sum_{y} f(x,y) e^{-j2\pi(\dots)}$$
 > **SVD learns the features** of the image (it adapts to the data).
 > **FFT fits the image** into a pre-defined set of waves.
 
----
+
 
 ## 🚀 Experimental Results
 
 ### 1. Compression Analysis
 I tested both methods at various compression ratios ($k$).
 
-**Visual Observations:**
-* **SVD Artifacts:** When $k$ is too low, SVD produces "blocky" vertical and horizontal streaks. This is because we are trying to rebuild the image using too few rank-1 matrices.
-* **FFT Artifacts:** FFT preserves the overall shape better but introduces "ringing" or "ripples" near sharp edges. This is theoretically known as the **Gibbs Phenomenon**—it is impossible to perfectly recreate a sharp edge using a finite sum of smooth sine waves.
+**Visual Analysis:**
+* **SVD Behavior:** When SVD compresses an image too much, it creates "blocky" or "streaky" artifacts. It struggles with textures (like the grass).
+* **FFT Behavior:** FFT preserves the overall structure better, but it creates "ripples" or "waves" around sharp edges (this is known as the Gibbs Phenomenon).
 
-<img width="400" alt="Screenshot 2025-12-05 015653" src="https://github.com/user-attachments/assets/def1dbe4-d4ff-4b98-a257-7232801e9ec2" />
-
-*Figure 1: Comparison of artifacts at high compression (k=1%). Note the "streaking" in SVD vs. "ringing" in FFT.*
+<div align="center">
+  <img width="400" alt="Screenshot 2025-12-05 015653" src="https://github.com/user-attachments/assets/84e98c72-3366-4229-92d0-72f2c4bacca9" />
+  <br>
+  <em>Figure 1: Comparison of artifacts at high compression (k=0.5%). Note the "streaking" blocks in SVD (top right) vs. "blurring" in FFT (bottom right).</em>
+</div>
 
 ### 2. Energy Compaction
 To understand why compression is possible, I plotted the **Cumulative Energy**.
 
-<img width="400" alt="Screenshot 2025-12-05 015715" src="https://github.com/user-attachments/assets/fe5ccffb-8b10-4509-a8a9-dce31e005c48" />
-
-*Figure 2: The Scree Plot. This confirms that natural images are "Low Rank." We can discard the tail end of the curve (80-90% of the data) because it contributes very little to the visual structure.*
+<div align="center">
+  <img width="400" alt="Screenshot 2025-12-05 015715" src="https://github.com/user-attachments/assets/7ee7e7c8-e016-4b04-a1c6-676de134cc61" />
+  <br>
+  <em>Figure 2: The Scree Plot. This confirms that natural images are "Low Rank." The red line shows we can discard the tail end of the curve (80-90% of the data) because it contributes very little to the visual structure.</em>
+</div>
 
 ### 3. Denoising Performance
 I added Gaussian noise to the inputs and attempted to recover the signal. SVD uses thresholding on singular values, while FFT uses a Low-Pass Filter.
 
-<table align="center">
+<div align="center">
+<table border="0">
   <tr>
-    <td align="center">
-      <img width="602" height="185" alt="Screenshot 2025-12-05 015746" src="https://github.com/user-attachments/assets/83093970-1beb-4370-8e54-722304f4e389" />
-      <br />
-      <b>Method A: SVD Reconstruction</b><br />
-      <i>Cleaned by truncating small singular values.</i>
+    <td align="center" width="45%">
+      <strong>Method A: SVD Reconstruction</strong><br>
+      <img width="400" alt="Screenshot 2025-12-05 015746" src="https://github.com/user-attachments/assets/ac46a99f-b84e-4729-bed2-ac4bcb23b4c0" />
+      <br>
+      <em>Cleaned by truncating small singular values.</em>
     </td>
-    <td align="center">
-      <img width="579" height="169" alt="Screenshot 2025-12-05 015808" src="https://github.com/user-attachments/assets/b1049d2d-b7cb-46ca-9756-f36cb031b379" />
-      <br />
-      <b>Method B: FFT Low-Pass Filter</b><br />
-      <i>Cleaned by cutting high frequencies.</i>
+    <td align="center" width="45%">
+      <strong>Method B: FFT Low-Pass Filter</strong><br>
+      <img width="400" alt="Screenshot 2025-12-05 015808" src="https://github.com/user-attachments/assets/b0f8681d-6f90-41e2-9e42-5814a1e0b9d9" />
+      <br>
+      <em>Cleaned by cutting high frequencies.</em>
     </td>
   </tr>
 </table>
-*Figure 3: Side-by-side comparison of denoising techniques on the Mandrill image.*
+<em>Figure 3: Side-by-side comparison of denoising techniques on the Mandrill image.</em>
+</div>
 
----
+
 
 ## 📊 Key Findings & Conclusion
 
@@ -86,17 +92,15 @@ I added Gaussian noise to the inputs and attempted to recover the signal. SVD us
     * **SVD** is computationally heavier because it must calculate the basis vectors for every new image. However, it separates "structure" from "noise" effectively if the noise is uncorrelated.
     * **FFT** is incredibly fast ($O(N \log N)$), but using a strict frequency cutoff can blur fine textures (like the mandrill's fur) because texture looks like high-frequency noise to the FFT.
 
----
 
-## 💻 Usage
 
-1.  **Prerequisites:** MATLAB with Image Processing Toolbox.
-2.  **Run the Analysis:**
-    * Run `main_project.m`.
-    * The script will automatically process 5 different image types and generate the comparison figures shown above.
+## 💻 How to Run the Code
 
----
+The project is built in MATLAB.
 
-### Author
-**[Your Name]**
-*Engineering Student | Exploring Linear Algebra & Signal Processing*
+1.  **Prerequisites:** Ensure you have MATLAB installed with the Image Processing Toolbox.
+2.  **Setup:**
+    * Clone the repository.
+    * **Step 1:** Run `dataGen.m` to generate the noisy test images (this script creates `.jpeg` files from the source `.tiff`s).
+    * **Step 2:** Run `main.m` to execute the full analysis calling the modular functions.
+3.  **Output:** The script will process all images in the directory and automatically generate the comparison figures.
