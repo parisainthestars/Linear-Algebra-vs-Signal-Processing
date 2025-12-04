@@ -43,11 +43,14 @@ I tested both methods at various compression ratios ($k$).
 * **FFT Artifacts:** FFT preserves the overall shape better but introduces "ringing" or "ripples" near sharp edges. This is theoretically known as the **Gibbs Phenomenon**—it is impossible to perfectly recreate a sharp edge using a finite sum of smooth sine waves.
 
 <img width="400" alt="Screenshot 2025-12-05 015653" src="https://github.com/user-attachments/assets/def1dbe4-d4ff-4b98-a257-7232801e9ec2" />
+
 *Figure 1: Comparison of artifacts at high compression (k=1%). Note the "streaking" in SVD vs. "ringing" in FFT.*
 
 ### 2. Energy Compaction
 To understand why compression is possible, I plotted the **Cumulative Energy**.
+
 <img width="400" alt="Screenshot 2025-12-05 015715" src="https://github.com/user-attachments/assets/fe5ccffb-8b10-4509-a8a9-dce31e005c48" />
+
 *Figure 2: The Scree Plot. This confirms that natural images are "Low Rank." We can discard the tail end of the curve (80-90% of the data) because it contributes very little to the visual structure.*
 
 ### 3. Denoising Performance
